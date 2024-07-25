@@ -2,8 +2,8 @@
 - Install XAMPP
 
 - Clone the repository using github
-	Go to C:/ProgramFiles/xampp/htdocs
-	Select this folder and click clone
+	- Go to C:/ProgramFiles/xampp/htdocs
+	- Select this folder and click clone
 
 - Open a browser and type localhost/phpmyadmin
 	- create a database and name it mydb
