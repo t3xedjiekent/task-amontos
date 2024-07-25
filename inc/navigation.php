@@ -34,7 +34,7 @@
                       <a href="./?page=models" class="nav-link nav-models">
                         <i class="nav-icon fas fa-car"></i>
                         <p>
-                          List of Cars
+                          Cars
                         </p>
                       </a>
                     </li> 
