@@ -1,7 +1,7 @@
 # How to Install
 - Install XAMPP
 
-- Clone the repository using github and for the directory:
+- Clone the repository using github
 	Go to C:/ProgramFiles/xampp/htdocs
 	Select this folder and click clone
 
