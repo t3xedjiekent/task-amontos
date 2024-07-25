@@ -13,11 +13,13 @@ class SystemSettings extends DBConnection{
 		return($this->conn);
 	}
 	function load_system_info(){
+		// if(!isset($_SESSION['system_info'])){
 			$sql = "SELECT * FROM system_info";
 			$qry = $this->conn->query($sql);
 				while($row = $qry->fetch_assoc()){
 					$_SESSION['system_info'][$row['meta_field']] = $row['meta_value'];
 				}
+		// }
 	}
 	function update_system_info(){
 		$sql = "SELECT * FROM system_info";
@@ -101,6 +103,59 @@ class SystemSettings extends DBConnection{
 				}
 			}
 			imagedestroy($temp);
+		}
+		if(isset($_FILES['banners']) && count($_FILES['banners']['tmp_name']) > 0){
+			$err='';
+			$banner_path = "uploads/banner/";
+			foreach($_FILES['banners']['tmp_name'] as $k => $v){
+				if(!empty($_FILES['banners']['tmp_name'][$k])){
+					$accept = array('image/jpeg','image/png');
+					if(!in_array($_FILES['banners']['type'][$k],$accept)){
+						$err = "Image file type is invalid";
+						break;
+					}
+					if($_FILES['banners']['type'][$k] == 'image/jpeg')
+						$uploadfile = imagecreatefromjpeg($_FILES['banners']['tmp_name'][$k]);
+					elseif($_FILES['banners']['type'][$k] == 'image/png')
+						$uploadfile = imagecreatefrompng($_FILES['banners']['tmp_name'][$k]);
+					if(!$uploadfile){
+						$err = "Image is invalid";
+						break;
+					}
+					list($width, $height) =getimagesize($_FILES['banners']['tmp_name'][$k]);
+					if($width > 1200 || $height > 480){
+						if($width > $height){
+							$perc = ($width - 1200) / $width;
+							$width = 1200;
+							$height = $height - ($height * $perc);
+						}else{
+							$perc = ($height - 480) / $height;
+							$height = 480;
+							$width = $width - ($width * $perc);
+						}
+					}
+					$temp = imagescale($uploadfile,$width,$height);
+					$spath = base_app.$banner_path.'/'.$_FILES['banners']['name'][$k];
+					$i = 1;
+					while(true){
+						if(is_file($spath)){
+							$spath = base_app.$banner_path.'/'.($i++).'_'.$_FILES['banners']['name'][$k];
+						}else{
+							break;
+						}
+					}
+					if($_FILES['banners']['type'][$k] == 'image/jpeg')
+					imagejpeg($temp,$spath,60);
+					elseif($_FILES['banners']['type'][$k] == 'image/png')
+					imagepng($temp,$spath,6);
+
+					imagedestroy($temp);
+				}
+			}
+			if(!empty($err)){
+				$resp['status'] = 'failed';
+				$resp['msg'] = $err;
+			}
 		}
 		
 		$update = $this->update_system_info();

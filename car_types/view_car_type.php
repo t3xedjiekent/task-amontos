@@ -1,6 +1,6 @@
 
 <?php
-require_once('../config.php');
+require_once('./../../config.php');
 if(isset($_GET['id']) && $_GET['id'] > 0){
     $qry = $conn->query("SELECT * from `car_type_list` where id = '{$_GET['id']}' and delete_flag = 0 ");
     if($qry->num_rows > 0){
